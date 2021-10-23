@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -7,10 +7,8 @@ const connection = mysql.createConnection({
     database: 'ng-scratch'
 });
 
-connection.connect();
-
 let getConnection = () => {
-    return connection;
+    return connection.promise();
 }
 
 module.exports = () => {
