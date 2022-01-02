@@ -2,6 +2,7 @@ const TOKEN_SECRET = 'Ft9gLBcZMjGZQ3lGHpTVodABhqCyQZr0vanX1RsCEMOP5OXPlGtS7yffm8
 
 const database = require("../database");
 const jwt = require('jsonwebtoken');
+const {auth} = require("mysql/lib/protocol/Auth");
 
 const dbConnection = database().getConnection();
 
@@ -18,14 +19,20 @@ let generateToken = async (payload) => {
 }
 
 let decodeToken = (token) => {
+    if (!token)
+        return null
     try {
-        let payload = jwt.verify(token, TOKEN_SECRET, {algorithm: 'HS256'});
-        return payload;
+        return jwt.verify(token, TOKEN_SECRET, {algorithm: 'HS256'});
     } catch (e) {
         console.log('Invalid token found');
         console.log(e.message);
         return null;
     }
+}
+
+let decodeTokenFromRequest = (req) => {
+    let authToken = req.headers.authentication;
+    return decodeToken(authToken);
 }
 
 let getUserRoles = async (userId) => {
@@ -54,6 +61,7 @@ let getLoggedInUserToken = async (user) => {
         Email: user.Email,
         PhoneNumber: user.PhoneNumber,
         Roles: roles,
+        UserId: user.id,
         iss: 'Ng-Scratch'
     }
     return await generateToken(token_payload);
@@ -62,5 +70,6 @@ let getLoggedInUserToken = async (user) => {
 
 module.exports = {
     getLoggedInUserToken: getLoggedInUserToken,
-    decodeToken: decodeToken
+    decodeToken: decodeToken,
+    decodeTokenFromRequest: decodeTokenFromRequest
 }
