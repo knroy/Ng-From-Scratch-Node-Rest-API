@@ -17,6 +17,10 @@ let insertNewBlog = async (title, description, authorId) => {
     return results.insertId;
 }
 
+let GetBlogs = async () => {
+
+}
+
 
 module.exports = {
     insertNewBlog: insertNewBlog

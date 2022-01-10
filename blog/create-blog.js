@@ -3,6 +3,7 @@ const tokenMod = require('./../authentication/token');
 
 const categoryUtils = require('./category-utils');
 const blogUtils = require('./blog-utils');
+const blogCategoryUtils = require('./blog-category.utils');
 
 let createBlogPostApi = async (req, res) => {
 
@@ -17,8 +18,6 @@ let createBlogPostApi = async (req, res) => {
 
     let blogId = await blogUtils.insertNewBlog(blogTitle, blogDescription, userId);
 
-    let categoryIds = [];
-
     for (let i = 0; i < categories.length; i++) {
         let catName = categories[i];
         let categoryId = -1;
@@ -26,7 +25,7 @@ let createBlogPostApi = async (req, res) => {
         if (categoryId < 0) {
             categoryId = await categoryUtils.insertCategory(catName);
         }
-        categoryIds.push(categoryId);
+        await blogCategoryUtils.InsertBlogCategory(blogId, categoryId);
     }
 
     res.json();

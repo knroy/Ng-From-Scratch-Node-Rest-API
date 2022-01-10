@@ -15,6 +15,18 @@ let buildInsertQuery = (tableName, jsonObject) => {
     }
 }
 
+let simpleReadQuery = (tableName, fields, condition = null, limit = 10) => {
+    let query = `SELECT ${fields.join(", ")} FROM ${tableName}`;
+    if (condition) {
+        query += ` WHERE ${condition}`;
+    }
+    if (limit > 0) {
+        query += ` LIMIT ${limit}`;
+    }
+    return query;
+}
+
 module.exports = {
-    buildInsertQuery: buildInsertQuery
+    buildInsertQuery: buildInsertQuery,
+    simpleReadQuery: simpleReadQuery
 }
