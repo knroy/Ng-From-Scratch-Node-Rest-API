@@ -24,8 +24,17 @@ let isCategoryNameAlreadyExists = async (categoryName) => {
     return results.length > 0 ? results[0].id : -1;
 }
 
+let getCategoriesByBlogId = async (blogId) => {
+    const query = `SELECT Categories.Name as Name FROM Categories JOIN BlogCategories
+ ON Categories.id = BlogCategories.CategoryId 
+ WHERE BlogCategories.BlogId = ${blogId}`;
+    const [results, _] = await dbConnection.execute(query);
+    return results;
+}
+
 
 module.exports = {
     isCategoryNameAlreadyExists: isCategoryNameAlreadyExists,
-    insertCategory: insertCategory
+    insertCategory: insertCategory,
+    getCategoriesByBlogId: getCategoriesByBlogId
 }
